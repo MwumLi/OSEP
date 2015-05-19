@@ -7,12 +7,7 @@
 }
 
 /***************string lib**********************************/
-/*
-	Name: get the length of string
-
-	Return Value:
-		return the length of string	
- */
+//得到字符串的长度
 int sp_strlen(char str[]) {
 
 	int i=0;
@@ -29,14 +24,10 @@ int sp_strlen(char str[]) {
 }
 
 /*
-	Name: 
-		sp_strchr - get the location of the first occurrence of the specified letter
-
-	Return Value:
-		if c exist in str, so return it's first location in str.
-		or return  -1
-
- */
+ * 得到字符 c 在字符串 str 中第一次出现的位置(索引)  
+ * 假如cmp = 0, 忽略大小写  
+ * 假如cmp != 0, 不忽略大小写
+*/
 int sp_strchr(char str[], char c, int cmp) {
 	
 	int i, len;
@@ -54,13 +45,9 @@ int sp_strchr(char str[], char c, int cmp) {
 }
 
 /*
-	Name: 
-		sp_rindex - get the location of the last occurrence of the specified letter
-
-	Return Value:
-		if c exist in str, so return it's lastt location in str.
-		or return  -1
-
+ * 得到字符 c 在字符串 str 中最后一次出现的位置(索引)  
+ * 假如cmp = 0, 忽略大小写  
+ * 假如cmp != 0, 不忽略大小写
 */
 
 int sp_strrchr(char str[], char c, int cmp) {
@@ -80,16 +67,13 @@ int sp_strrchr(char str[], char c, int cmp) {
 }
 
 /*
-	Name: 
-		sp_strcpy - copy a string
-
-	Description:
-		if str1's length > str2's length , the whole str2 into str1 
-		or copy  str1's length content  
-
-	Return Value: 
-		return a  copy of length
-*/
+ * 复制字符串str2到字符串str1中  
+ * 限制: 
+ *		假如str1的长度大于等于str2, 那么str2 被复制到字符串 str1中  
+ *		假如str1的长度小于str2, 那么只复制str2中str1长度的内容到str1  
+ * 返回值:  
+ *		返回复制的字符个数
+ * */
 
 int sp_strcpy(char str1[], char str2[])
 {
@@ -112,8 +96,30 @@ int sp_strcpy(char str1[], char str2[])
 	return len1;
 }
 /*
- *	Name:
- *		sp_toupper, tolower - convert letter to upper or lower case
+ *	把字符串s2附加到s1后  
+ *	限制: s1的空间必须足够的大 
+ * */
+int sp_strcat(char s1[], char s2[])
+{
+	int i;
+	int pos;
+	int len;
+
+	pos = sp_strlen(s1);
+	pos = pos - 1;
+	len = sp_strlen(s2);
+	
+	i = 0;
+	while(i < len) {
+		s1[pos] = s2[i];
+		pos = pos + 1;
+		i = i + 1;
+	}
+	s1[pos] = '\0';
+	return i;
+}
+/*
+ *	把字符串str中字符转化称大写  
  *	
  * */
 void sp_toupper(char str[])
@@ -140,6 +146,10 @@ void sp_toupper(char str[])
 	}
 }
 
+/*
+ *	把字符串str中字符转化称小写
+ *	
+ * */
 
 void sp_tolower(char str[])
 {
@@ -165,8 +175,12 @@ void sp_tolower(char str[])
 	}
 }
 /* 
- *	compare the first n bytes between  str1 and str2
- *	n less than or equal to str1's length  and str2's length
+ * 比较str1和str2的前n个字符是否相同(n小于str1和str2的长度)
+ * 假如cmp = 0, 忽略大小写
+ * 假如cmp != 0, 不忽略大小写
+ * 返回值:
+ *		相同，返回0
+ *		不相同，返回最后一对字符的差值
  * */
 int sp_strcmpN(char str1[], char str2[], int cmp, int n)
 {
@@ -191,10 +205,9 @@ int sp_strcmpN(char str1[], char str2[], int cmp, int n)
  *	cmp = 0, 忽略大小写
  *	cmp = 1, 不忽略大小写
  * 返回值：
- *	假如str1 与 str2 完全相同，则返回 0
- *	假如str1 与 str2 最后比较的一个字母c1,c2不同，则返回 c1 - c2  
- *	如果在 ascii 码表中，c1 在 c2 之前，返回负数；否则返回正数  
-  * */
+ *		相同，返回0
+ *		不相同，返回最后一对字符的差值
+ * */
 int sp_strcmp(char str1[], char str2[], int cmp)
 {
 	int i, len1, len2, len;
@@ -228,6 +241,9 @@ int sp_strcmp(char str1[], char str2[], int cmp)
  * cmp 决定是否忽略大小写
  * cmp = 0, 忽略大小写
  * cmp = 1, 不忽略大小写
+ * 返回值：
+ *		相同，返回0
+ *		不相同，返回最后一对字符的差值
  * */
 int sp_strncmp(char str1[], char str2[],int cmp, int n)
 {
@@ -246,7 +262,7 @@ int sp_strncmp(char str1[], char str2[],int cmp, int n)
 }
 
 /*
- * 找到字符串str中的子串substr返回其位置  
+ * 找到字符串str中的子串substr返回其位置(索引)
  * cmp决定是否忽略大小写  
  * cmp = 0, 忽略大小写
  * cmp = 1,不忽略大小写

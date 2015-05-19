@@ -1,35 +1,93 @@
-#ifndef __SPLOS_IO_H
+ifndef __SPLOS_IO_H
 #define __SPLOS_IO_H
 
-void printf_char(char c) {
-	printf(c);
+#import {
+	./splos_string.p;
+	./splos_math.p;
+}
+
+#define STDIN_FILENO	0
+#define STDOUT_FILENO	1
+#define STDERR_FILENO	2
+
+#define BUFFER_SIZE		200
+#define NUMBER_LEN		20
+
+//打印字符串
+int sp_printf_string(char s[]) {
+	int len = sp_strlen(s);
+	return sys_write(STDOUT_FILENO, s, len);
+}
+
+//打印单个字符
+int  sp_printf_char(char c) {
+	int ret;
+
+	char out[2]={c, '\0'};
+	return sys_write(STDOUT_FILENO, out, 1);
 
 }
 
-void printf_chars(char s[], int n) {
+//打印单个数字
+int sp_printf_num(int num) {
+
+	char s[NUMBER_LEN];
+
+	sp_numtostring(num, s);	//数字转化称字符串  
+
+	return sp_printf_string(s);	//打印字符串
+
+}
+
+//打印字符数组
+//arr[10]={'a','b','c','d'}
+//输出结果: a,b,c,d
+int sp_printf_chars(char arr[], int n) {
 	int i = 0;
-	
-	while(i < n) {
-		printf(''');
-		printf(s[i]);
-		printf(''');
-		printf(' ');
+	int j = 0;
+	char combine[BUFFER_SIZE];
+
+	if(n < 1) {
+		return -1;
 	}
-	printf('\n');
+	while(j < n) {
+		combine[i] = arr[j];
+		i = i + 1;
+		combine[i] = ',';
+		i = i + 1;
+		j = j + 1;
+	}
+	
+	i = i - 1;
+	combine[i] = '\0';
+
+	sp_strcat(combine, '\n');	//添加换行
+	sys_write(STDOUT_FILENO, combine, i-1);
+	return 0;
 }
 
-void printf_nums(int s[], int n) {
+
+//打印数字数组
+//arr[10]={11,34,655,-23}
+//输出结果: 11,34,655,-23
+void sp_printf_nums(int arr[], int n) {
 	int i = 0;
-	
+	char numS[NUMBER_LEN];
+	char arrS[BUFFER_SIZE];
+
+	arrs[0] = '\0';	//用一个空字符串初始化
 	while(i < n) {
-		printf(s[i]);
-		printf(' ');
+		sp_numtostring(arr[i], numS);	//number转化成string
+		sp_strcat(arrS, numS);	//附加字符串numS到arrS
+		sp_strcat(arrS, ",");
 	}
-	printf('\n');
+
+	i = sp_strlen(arrs);
+	arrs[i - 1]	= '\0';	//去掉末尾逗号
+
+	sp_strcat(arrS, "\n");	//添加换行
+	sp_printf_string(arrs);	//输出字符串
 }
 
-void printf_num(int num) {
-	printf(num);
-}
 
 #endif
