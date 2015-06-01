@@ -1,5 +1,5 @@
-ifndef __SPLOS_IO_H
-#define __SPLOS_IO_H
+#ifndef __SPLOS_IO_P
+#define __SPLOS_IO_P
 
 #import {
 	./splos_string.p;
