@@ -1,0 +1,68 @@
+#import {
+	splos_tool.pc;
+}
+
+int ses1;
+int ses2;
+int ses3;
+
+int x,y;
+int n;
+
+//矩形面积
+void getSquare()
+{
+    ses1 = x * y;
+	sp_printf_num(ses1);
+	return ;
+}
+
+/*阶乘*/
+void factorial()
+{
+    int i;
+    if(n <= 0) {
+        ses2 = -1;
+    } else {
+        i = 1;
+        ses2 = 1;
+        while(i < n) {
+            ses2 = ses2 * i;
+            i = i + 1;
+        }
+    }
+	sp_printf_num(ses2);
+	return;
+}
+
+void accumulation()
+{
+    int i;
+    if(n <= 0) {
+        ses3 = -1;
+    } else {
+        i = 1;
+        ses3 = 0;
+        while(i <= n) {
+            ses3 = ses3 + i;
+            i = i + 1;
+        }
+    }
+	sp_printf_num(ses3);
+	return ;
+}
+
+int main()
+{
+	x  = 3;
+	y = 5;
+	n = 10;
+	
+    parallel{
+        getSquare();
+        factorial();
+        accumulation();
+    }
+	
+    return 0;
+}

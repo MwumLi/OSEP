@@ -1,0 +1,56 @@
+
+int ses1;
+int ses2;
+int ses3;
+
+int x,y;
+int n;
+
+void getSquare()
+{
+    ses1 = x * y;
+}
+void factorial()
+{
+    int i;
+    if(n <= 0) {
+        ses1 = -1;
+    } else {
+        i = 1;
+        ses2 = 1;
+        while(i < n) {
+            ses2 = ses2 * i;
+            i = i + 1;
+        }
+    }
+}
+
+void accumulation()
+{
+    int i;
+    if(n <= 0) {
+        ses1 = -1;
+    } else {
+        i = 1;
+        ses2 = 0;
+        while(i <= n) {
+            ses2 = ses2 + i;
+            i = i + 1;
+        }
+    }
+}
+
+int main()
+{
+	x  = 3;
+	y = 5;
+	n = 10;
+	
+    parallel{
+        getSquare();
+        factorial();
+        accumulation();
+    }
+	
+    return 0;
+}

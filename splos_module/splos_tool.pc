@@ -1,0 +1,449 @@
+#ifndef __SPLOS_IO_P
+#define __SPLOS_IO_P
+
+#define STDIN_FILENO	0
+#define STDOUT_FILENO	1
+#define STDERR_FILENO	2
+
+#define BUFFER_SIZE		200
+#define NUMBER_LEN		20
+
+/**char**/
+char sp_chartoupper(char c)
+{
+	int distance = 'a' - 'A';
+
+	if(c >= 'a' && c <= 'z')
+		return c-distance;
+}
+char sp_chartolower(char c)
+{
+	int distance = 'a' - 'A';
+
+	if(c >= 'A' && c <= 'Z')
+		return c+distance;
+}
+int sp_charcasecmp(char c1, char c2, int cmp)
+{
+	if(cmp == 0) {
+		c1 = sp_chartolower(c1);
+		c2 = sp_chartolower(c2);
+	} 
+
+	return c1 - c2;
+}
+
+/**math**/
+
+int sp_pow(int x, int y)
+{
+	int ret = 1;
+
+	while(y > 0) {
+		ret = ret * x;
+		y = y - 1;
+	}
+
+	return ret;
+}
+
+int sp_abs(int x)
+{
+    if(x < 0)
+      x = 0 - x;
+	return x;
+}
+int sp_numbits(int num)
+{
+	int i = 0;
+
+	if(num < 0)
+	  i = i + 1;
+
+	while( num/10 ) {
+		num = num/10;
+		i = i + 1;
+	}
+	i = i + 1;
+
+	return i;
+}
+int sp_numtostring(int num, char s[])
+{
+	int i = 0;
+	int bits = sp_numbits(num);
+
+	if(num < 0)
+	  s[0] = '-';
+
+	i = bits;
+	s[i] = '\0';
+	i = i - 1;
+	while (num/10 ) {
+		s[i] = num%10;
+		num = num / 10;
+		i = i - 1;	
+	}
+	s[i] = num % 10;
+
+	return bits;
+}
+
+/*string*/
+int sp_strlen(char str[]) {
+
+	int i=0;
+
+	if( !str ) {
+		return -1;
+	}
+	
+	while(str[i]) {
+		i++;
+	}
+
+	return i;
+}
+
+int sp_strchr(char str[], char c, int cmp) {
+	
+	int i, len;
+
+	len = sp_strlen(str);
+	i = 0;
+
+	while(i < len) {
+		if(sp_charcasecmp(str[i], c, cmp) == 0) 
+		  return i;
+		i = i + 1;
+	}
+
+	return -1;
+}
+
+
+int sp_strrchr(char str[], char c, int cmp) {
+
+	int i, len;
+
+	len = sp_strlen(str);
+	i = len-1;
+
+	while(i > -1) {
+		if(sp_charcasecmp(str[i], c, cmp) == 0) 
+		  return i;
+		i = i - 1;
+	}
+
+	return -1;
+}
+
+
+int sp_strcpy(char str1[], char str2[])
+{
+	int i, len1, len2;
+
+	i = 0;
+	len1 = sp_strlen(str1);
+	len2 = sp_strlen(str2);
+
+	if(len1 > len2)	
+	  len1 = len2;
+
+	while(i < len1) {
+		str1[i] = str2[i];
+		i = i + 1;
+	}
+
+	str1[i] = '\0';
+
+	return len1;
+}
+int sp_strcat(char s1[], char s2[])
+{
+	int i;
+	int pos;
+	int len;
+
+	pos = sp_strlen(s1);
+	pos = pos - 1;
+	len = sp_strlen(s2);
+	
+	i = 0;
+	while(i < len) {
+		s1[pos] = s2[i];
+		pos = pos + 1;
+		i = i + 1;
+	}
+	s1[pos] = '\0';
+	return i;
+}
+void sp_toupper(char str[])
+{
+	char anum, znum, Anum;
+	int i,upper;
+	
+	anum = 'a';
+	znum = 'z';
+	Anum = 'A';
+	
+	upper = anum - Anum;
+
+	i = 0;
+	while(str[i] != '\0') {
+		
+		if(str[i] >= anum && str[i] <= znum) {
+			str[i] = str[i] - upper;
+		}
+
+		i++;
+	}
+}
+
+void sp_tolower(char str[])
+{
+	char Anum, Znum, anum;
+	int i,upper;
+	
+	Anum = 'A';
+	Znum = 'Z';
+	anum = 'a';
+	
+	upper = anum - Anum;
+
+	i = 0;
+	while(str[i] != '\0') {
+		
+		if(str[i] >= Anum && str[i] <= Znum) {
+			str[i] = str[i] + upper;
+		}
+
+		i++;
+	}
+}
+int sp_strcmpN(char str1[], char str2[], int cmp, int n)
+{
+	int i, ret;
+
+	i = 0;
+	while(i < n) {
+		ret = sp_charcasecmp(str1[i], str2[i], cmp);
+
+		if( ret != 0 )
+		  return ret;
+
+		i++;
+	}
+
+	return 0;
+}
+
+int sp_strcmp(char str1[], char str2[], int cmp)
+{
+	int i, len1, len2, len;
+	int ret;
+
+	len1 = sp_strlen(str1);
+	len2 = sp_strlen(str2);
+
+	i = 0;
+	ret = 0;
+
+	len = len1;
+	if(len1 > len2)
+	  len = len2;
+	
+	ret = sp_strcmpN(str1, str2, cmp, len);
+	if(ret != 0)
+		return ret;
+
+	if(len1 == len2)
+	  return ret;
+	else if(len1 > len2)
+	  return str1[i];
+	else
+	  return str2[i];
+}
+
+int sp_strncmp(char str1[], char str2[],int cmp, int n)
+{
+	int i, len1, len2;
+	
+	if(n < 0)
+	  n = 0 - n;
+
+	len1 = sp_strlen(str1);
+	len2 = sp_strlen(str2);
+	
+	if(n >= len1 || n >= len2) {
+		return sp_strcmp(str1, str2, cmp);
+	} else
+		return sp_strcmpN(str1, str2, cmp, n);
+}
+
+int sp_strstr(char str[], char substr[], int cmp)
+{
+	int len1,len2;
+	int start, end;
+	int i;
+	int judge;
+
+	start = sp_strchr(str, substr[0], cmp);
+	if(start < 0)
+	  return -1;
+	end = sp_strrchr(str, substr[0], cmp);
+
+
+	len1 = sp_strlen(str);
+	len2 = sp_strlen(substr);
+
+	if((len1-start) < len2)
+	  return -2;
+
+	if((end-start+1) < len2)
+	  return -3;
+
+	if((len1-end) < len2)
+	  len1 = end - len2 + 1;
+	
+	while(start < len1) {
+	
+		i = 0;
+		judge = 1;
+		while(i < len2) {
+			if( sp_charcasecmp(str[start+i], substr[i], cmp) ) {
+				judge = 0;
+				break;
+			}
+			i = i + 1;
+		}
+
+		if(judge) 
+		  return start;
+		start = start + 1;
+	}
+
+	return -4;
+}
+
+int sp_strtoi(char str[], char success[])
+{
+	int startIndex;
+	int i, j, k;
+	int len;
+	char numStr[20];
+	int num;
+
+	startIndex = -1;
+	len = sp_strlen(str);
+	
+	i = 0;
+	success[0] = 0;
+	while(i < len) {
+		if(str[i] >= 48 && str[i] <= 57) {
+			startIndex = i;
+			success[0] = 1;
+			j = i;
+			k = 0;
+			while(j < len && (str[j] >= 48 && str[j] <= 57)) {
+				numStr[k] = str[j];
+
+				k = k + 1;
+				j = j + 1;
+			}
+			break;
+		}
+		i = i + 1;
+	}
+	
+	if(success[0] == 1) {
+		i = 0;
+		num = 0;		
+		while(k > 0) {
+			num = num + numStr[i]*sp_pow(10, k);
+			k = k - 1;
+			i = i + 1;
+		}
+		if(startIndex - 1 >= 0 && str[startIndex-1] == '-')
+			return 0 - num;
+		else
+			return num;
+	} else {
+		success[0] = 0;
+		return -1;
+	}
+
+}
+
+/**io**/
+void sp_printf_string(char s[]) {
+	int len = sp_strlen(s);
+	print(s);
+	return;
+}
+
+void  sp_printf_char(char c) {
+	int ret;
+
+	char out[2]={c, '\0'};
+	print(out);
+	return;
+}
+
+void sp_printf_num(int num) {
+
+	char s[NUMBER_LEN];
+
+	sp_numtostring(num, s);	
+
+	print(s);
+	return ;
+}
+
+void sp_printf_chars(char arr[], int n) {
+	int i = 0;
+	int j = 0;
+	char combine[BUFFER_SIZE];
+
+	if(n < 1) {
+		return -1;
+	}
+	while(j < n) {
+		combine[i] = arr[j];
+		i = i + 1;
+		combine[i] = ',';
+		i = i + 1;
+		j = j + 1;
+	}
+	
+	i = i - 1;
+	combine[i] = '\0';
+
+	sp_strcat(combine, '\n');	
+	print(combine);
+	return ;
+}
+
+
+void sp_printf_nums(int arr[], int n) {
+	int i = 0;
+	char numS[NUMBER_LEN];
+	char arrS[BUFFER_SIZE];
+
+	arrS[0] = '\0';
+	while(i < n) {
+		sp_numtostring(arr[i], numS);	
+		sp_strcat(arrS, numS);	
+		sp_strcat(arrS, ",");
+	}
+
+	i = sp_strlen(arrS);
+	arrS[i - 1]	= '\0';	
+
+	sp_strcat(arrS, "\n");
+	print(arrS);
+	return ;
+}
+
+
+#endif
